@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styles from './App.module.css'
+import {useMain} from "./useMain";
 
 function App() {
+
+  const {parsedData, data, handleTextAreaChange, handleParse, handleCopyClick, childrenWrapperRef} = useMain()
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.container}>
+      <textarea className={styles.text} value={data} onChange={handleTextAreaChange}/>
+
+      <button onClick={handleParse} className={styles.button}>Parse</button>
+
+      {parsedData &&
+          <>
+            <div className={styles.dataContainer} ref={childrenWrapperRef}>
+              {parsedData.map(({sum, currency, categoryName}) => <div className={styles.dataWrap}>
+                <span className={styles.item}>{sum}</span>
+                <span className={styles.item}>{currency}</span>
+                <span className={styles.item}>{categoryName}</span>
+              </div>)}
+            </div>
+            <button className={styles.button} onClick={handleCopyClick}>Copy</button>
+          </>
+      }
+
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
