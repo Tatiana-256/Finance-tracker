@@ -3,7 +3,7 @@ import styles from "./App.module.css";
 
 export const HomePage = () => {
 
-  const {parsedData, data, handleTextAreaChange, handleParse, handleCopyClick, childrenWrapperRef} = useMain()
+  const {parsedData, data, parsedDataByCurrency, handleTextAreaChange, handleParse, handleCopyClick, childrenWrapperRef} = useMain()
 
   return (
     <div className={styles.container}>
@@ -24,6 +24,17 @@ export const HomePage = () => {
           </>
       }
 
+      {parsedDataByCurrency &&
+          <>
+            <div className={styles.dataContainer} ref={childrenWrapperRef}>
+              {parsedDataByCurrency.map(({sum, currency}) => <div className={styles.dataWrap}>
+                <span className={styles.item}>{sum}</span>
+                <span className={styles.item}>{currency}</span>
+              </div>)}
+            </div>
+            <button className={styles.button} onClick={handleCopyClick}>Copy</button>
+          </>
+      }
     </div>
   )
 }
