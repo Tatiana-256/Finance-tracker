@@ -1,0 +1,17 @@
+.total_container{
+    border: 1px solid #747bff;
+    padding: 24px;
+    max-width: 500px;
+    display: flex;
+    gap: 24px;
+}
+
+.select_container{
+    width: 100%;
+    border-radius: 20px;
+    height: 36px;
+    border: 0.5px solid #9bd6ff;
+    padding: 6px 12px;
+    box-sizing: border-box;
+}
+.select_item{}

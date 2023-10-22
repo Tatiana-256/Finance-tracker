@@ -1,7 +1,7 @@
 import { useMain } from './useMain';
 import styles from './styles.module.css';
 
-import { SumByCurrency } from './views';
+import { SumByCurrency, TotalSum } from './views';
 import { CurrencySideBar } from './views/CurrencySideBar';
 import { CZK } from './constants';
 import icon from '../../assets/svg/img.png';
@@ -18,6 +18,7 @@ export const HomePage = () => {
     handleCopyClick,
     childrenWrapperRef,
     parsedDataByCurrency,
+    totalCZ,
   } = useMain(currency);
 
   return (
@@ -43,6 +44,8 @@ export const HomePage = () => {
       <button onClick={handleParse} className={styles.button}>
         Parse
       </button>
+
+      {totalCZ && <TotalSum currency="cz" sum={totalCZ} />}
 
       {parsedData && (
         <>
@@ -70,8 +73,6 @@ export const HomePage = () => {
           handleCopyClick={handleCopyClick}
         />
       )}
-
-      {/*{totalSum && <TotalSum totalSum={totalSum} />}*/}
     </div>
   );
 };

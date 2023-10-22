@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CZK } from '../constants';
+import { Currency } from '../types';
 
 export const useCurrency = () => {
   const [usd, setUSD] = useState(CZK.usd);
@@ -7,7 +8,8 @@ export const useCurrency = () => {
   const [uah, setUAH] = useState(CZK.uah);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [currency, setCurrency] = useState<typeof CZK>(CZK);
+  const [currenciesRates, setCurrenciesRates] = useState<typeof CZK>(CZK);
+  const [currentCurrency, setCurrentCurrency] = useState<Currency>('czk');
 
   return {
     usd,
@@ -18,7 +20,9 @@ export const useCurrency = () => {
     setUSD,
     isOpen,
     setIsOpen,
-    currency,
-    setCurrency,
+    currency: currenciesRates,
+    setCurrency: setCurrenciesRates,
+    currentCurrency,
+    setCurrentCurrency,
   };
 };

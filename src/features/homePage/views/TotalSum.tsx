@@ -1,15 +1,19 @@
 import { FC } from 'react';
+import styles from './styles.module.css';
 
 type TotalSumProps = {
   currency: string;
-  sum: string;
+  sum: number;
 };
 
 export const TotalSum: FC<TotalSumProps> = ({ sum, currency }) => {
   return (
-    <div>
-      <div>{sum}</div>
-      <div>{currency}</div>
-    </div>
+    <>
+      Total
+      <div className={styles.total_container}>
+        <div>{sum}</div>
+        <div>{currency}</div>
+      </div>
+    </>
   );
 };
