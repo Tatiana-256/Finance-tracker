@@ -1,37 +1,37 @@
 import { useMain } from './useMain';
 import styles from './styles.module.css';
 
-import { SumByCurrency, TotalSum } from './views';
+import { SumByCategory, SumByCurrency, TotalSum } from './views';
 import { CurrencySideBar } from './views/CurrencySideBar';
 import { CZK } from './constants';
 import icon from '../../assets/svg/img.png';
 import { useCurrency } from './views/hooks';
+import { Currency } from './types';
 
 export const HomePage = () => {
-  const { isOpen, setIsOpen, currency, setCurrency } = useCurrency();
+  const {
+    isOpen,
+    setIsOpen,
+    currenciesRates,
+    setCurrenciesRates,
+    currentCurrency,
+    setCurrentCurrency,
+  } = useCurrency();
 
   const {
-    parsedData,
-    data,
+    parsedDataByCategory,
+    input,
     handleTextAreaChange,
     handleParse,
     handleCopyClick,
     childrenWrapperRef,
     parsedDataByCurrency,
     totalCZ,
-  } = useMain(currency);
+    exchangeTotalSum,
+  } = useMain(currenciesRates, currentCurrency);
 
   return (
     <div className={styles.container}>
-      <CurrencySideBar
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onSave={(value: typeof CZK) => {
-          setCurrency(value);
-          setIsOpen(false);
-        }}
-      />
-
       <button
         onClick={() => setIsOpen((prevState) => !prevState)}
         className={styles.currency_open_button}
@@ -39,31 +39,30 @@ export const HomePage = () => {
         <img src={icon} className={styles.img} alt="currency" />
       </button>
 
-      <textarea className={styles.text} value={data} onChange={handleTextAreaChange} />
+      <CurrencySideBar
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onSave={(value: typeof CZK, currentCurrency: Currency) => {
+          setCurrenciesRates(value);
+          setCurrentCurrency(currentCurrency);
+          setIsOpen(false);
+        }}
+      />
+
+      <textarea className={styles.text} value={input} onChange={handleTextAreaChange} />
 
       <button onClick={handleParse} className={styles.button}>
         Parse
       </button>
 
-      {totalCZ && <TotalSum currency="cz" sum={totalCZ} />}
+      {totalCZ && <TotalSum currency={currentCurrency} sum={exchangeTotalSum || totalCZ} />}
 
-      {parsedData && (
-        <>
-          <div>Parsed data by Categories</div>
-
-          <div className={styles.dataContainer} ref={childrenWrapperRef}>
-            {parsedData.map(({ sum, currency, categoryName }) => (
-              <div className={styles.dataWrap}>
-                <span className={styles.item}>{sum}</span>
-                <span className={styles.item}>{currency}</span>
-                <span className={styles.item}>{categoryName}</span>
-              </div>
-            ))}
-          </div>
-          <button className={styles.button} onClick={handleCopyClick}>
-            Copy
-          </button>
-        </>
+      {parsedDataByCategory && (
+        <SumByCategory
+          parsedDataByCategory={parsedDataByCategory}
+          handleCopyClick={handleCopyClick}
+          childrenWrapperRef={childrenWrapperRef}
+        />
       )}
 
       {parsedDataByCurrency && (

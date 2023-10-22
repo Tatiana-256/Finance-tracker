@@ -20,8 +20,8 @@ export const useCurrency = () => {
     setUSD,
     isOpen,
     setIsOpen,
-    currency: currenciesRates,
-    setCurrency: setCurrenciesRates,
+    currenciesRates,
+    setCurrenciesRates,
     currentCurrency,
     setCurrentCurrency,
   };

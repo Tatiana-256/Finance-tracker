@@ -1,20 +1,48 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { Category, Currency, UserCurrency, ValueByCurrency } from './types';
 import { CZK } from './constants';
 
-export const useMain = (currency: typeof CZK) => {
-  const [data, setData] = useState('');
+export const useMain = (currenciesRates: typeof CZK, currentCurrency: Currency) => {
+  const [input, setInput] = useState('');
 
+  const [parsedData, setParsedData] = useState<null | string[][]>(null);
   const [parsedDataByCategory, setParsedDataByCategory] = useState<null | Category[]>(null);
   const [parsedDataByCurrency, setParsedDataByCurrency] = useState<null | ValueByCurrency[]>(null);
   const [totalCZ, setTotalCZ] = useState<null | number>(null);
+  const [exchangeTotalSum, setExchangeTotalSum] = useState<null | number>(null);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setData(e.target.value);
+    setInput(e.target.value);
   };
 
+  useEffect(() => {
+    parsedData && calculateTotalSumByCurrency(parsedData);
+  }, [currenciesRates.usd, currenciesRates.uah, currenciesRates.eur]);
+
+  useEffect(() => {
+    if (!totalCZ) return;
+
+    const getNewTotal = () => {
+      if (currentCurrency === 'czk') {
+        return totalCZ;
+      }
+      if (currentCurrency === 'eur') {
+        return totalCZ / Number(currenciesRates.eur);
+      }
+      if (currentCurrency === 'usd') {
+        return totalCZ / Number(currenciesRates.usd);
+      }
+      if (currentCurrency === 'uah') {
+        return totalCZ / Number(currenciesRates.uah);
+      }
+      return 0;
+    };
+
+    setExchangeTotalSum(getNewTotal);
+  }, [currentCurrency]);
+
   const handleParse = () => {
-    const dividedStringByEnter = data.split(/\r?\n/);
+    const dividedStringByEnter = input.split(/\r?\n/);
 
     const filteredData = dividedStringByEnter
       .map((el) => el.split(' '))
@@ -46,8 +74,10 @@ export const useMain = (currency: typeof CZK) => {
       }
     });
 
+    setParsedData(filteredData);
     setParsedDataByCategory(Object.values(dict));
     setParsedDataByCurrency(Object.values(dictByCurrency));
+
     calculateTotalSumByCurrency(filteredData);
   };
 
@@ -62,30 +92,31 @@ export const useMain = (currency: typeof CZK) => {
       return Number(data[0]);
     }
     if (data[1] === 'e') {
-      return Number(data[0]) * Number(CZK.eur);
+      return Number(data[0]) * Number(currenciesRates.eur);
     }
     if (data[1] === 'usd') {
-      return Number(data[0]) * Number(CZK.usd);
+      return Number(data[0]) * Number(currenciesRates.usd);
     }
     if (data[1] === 'ua') {
-      return Number(data[0]) * Number(CZK.uah);
+      return Number(data[0]) * Number(currenciesRates.uah);
     }
     return 0;
   }
 
-  function calculateTotalSumByCurrency(data: string[][], currency: Currency = 'czk') {
+  function calculateTotalSumByCurrency(data: string[][]) {
     const total = data.reduce((prev, current) => prev + convertSum(current), 0);
     setTotalCZ(total);
   }
 
   return {
-    data,
-    parsedData: parsedDataByCategory,
+    input,
+    parsedDataByCategory,
     handleTextAreaChange,
     handleParse,
     handleCopyClick,
     childrenWrapperRef,
     parsedDataByCurrency,
     totalCZ,
+    exchangeTotalSum,
   };
 };

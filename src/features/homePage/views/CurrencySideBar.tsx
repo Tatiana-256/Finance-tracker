@@ -6,17 +6,19 @@ import { useCurrency } from './hooks';
 import { CZK } from '../constants';
 import { Input } from '../../../components';
 import { CurrencySelect } from './CurrencySelect';
+import { Currency } from '../types';
 
 type CurrencySideBarProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (currency: typeof CZK) => void;
+  onSave: (currency: typeof CZK, currentCurrency: Currency) => void;
 };
 
 export const CurrencySideBar: FC<CurrencySideBarProps> = ({ isOpen, onClose, onSave }) => {
   const { usd, setUSD, uah, setUAH, eur, setEUR, currentCurrency, setCurrentCurrency } =
     useCurrency();
 
+  console.log('side', currentCurrency);
   return (
     <div className={cn(styles.currencyWrap, { [styles.currency_open]: isOpen })}>
       <button className={styles.currency_close_button} onClick={onClose}>
@@ -38,7 +40,7 @@ export const CurrencySideBar: FC<CurrencySideBarProps> = ({ isOpen, onClose, onS
 
       <CurrencySelect onChange={setCurrentCurrency} value={currentCurrency} />
 
-      <button onClick={() => onSave({ usd, eur, uah })}>Save</button>
+      <button onClick={() => onSave({ usd, eur, uah }, currentCurrency)}>Save</button>
     </div>
   );
 };
