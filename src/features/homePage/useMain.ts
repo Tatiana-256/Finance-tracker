@@ -1,9 +1,8 @@
 import React, { createRef, useState } from 'react';
+import { Category, ValueByCurrency } from './types';
+import { CZK } from './constants';
 
-type Category = { sum: number; currency: string; categoryName: string };
-type ValueByCurrency = { sum: number; currency: string };
-
-export const useMain = () => {
+export const useMain = (currency: typeof CZK) => {
   const [data, setData] = useState('');
   const [parsedData, setParsedData] = useState<null | Category[]>(null);
   const [parsedDataByCurrency, setParsedDataByCurrency] = useState<null | ValueByCurrency[]>(null);
@@ -11,6 +10,8 @@ export const useMain = () => {
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setData(e.target.value);
   };
+
+  console.log(currency);
 
   const handleParse = () => {
     const dividedStringByEnter = data.split(/\r?\n/);
