@@ -39,7 +39,7 @@ export const useMain = (currenciesRates: typeof CZK, currentCurrency: Currency) 
     };
 
     setExchangeTotalSum(getNewTotal);
-  }, [currentCurrency]);
+  }, [currentCurrency, currenciesRates.usd, currenciesRates.uah, currenciesRates.eur]);
 
   const handleParse = () => {
     const dividedStringByEnter = input.split(/\r?\n/);
