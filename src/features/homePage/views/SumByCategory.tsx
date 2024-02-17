@@ -13,6 +13,7 @@ export const SumByCategory: FC<SumByCategoryProp> = ({
   handleCopyClick,
   childrenWrapperRef,
 }) => {
+  console.log(parsedDataByCategory);
   return (
     <>
       <div>Parsed data by Categories</div>
@@ -20,11 +21,7 @@ export const SumByCategory: FC<SumByCategoryProp> = ({
       <div className={styles.dataContainer} ref={childrenWrapperRef}>
         {parsedDataByCategory.map(({ sum, currency, categoryName }) => (
           <div className={styles.dataWrap}>
-            <span className={styles.item}>{sum}</span>
-
-            <span className={styles.item}>{currency}</span>
-
-            <span className={styles.item}>{categoryName}</span>
+            {sum} {currency} {categoryName}
           </div>
         ))}
       </div>
